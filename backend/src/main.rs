@@ -1,20 +1,21 @@
 mod db;
 mod auth;
+mod upload; // Sumamos el nuevo módulo
 
-use axum::{routing::post, Router};
+use axum::{extract::DefaultBodyLimit, routing::post, Router};
 use dotenvy::dotenv;
 use std::net::SocketAddr;
 
 #[tokio::main]
 async fn main() {
     dotenv().ok();
-
-    // Creamos el pool de conexión una sola vez
     let pool = db::crear_pool().await;
 
-    // Pasamos el pool como "State" a las rutas que lo necesiten
     let app = Router::new()
         .route("/login", post(auth::login_handler))
+        // Agregamos la ruta de subida y le sacamos el límite de tamaño
+        .route("/upload", post(upload::upload_handler))
+        .layer(DefaultBodyLimit::disable()) 
         .with_state(pool);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
