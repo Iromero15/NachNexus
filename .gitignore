@@ -1,0 +1,11 @@
+# Ignorar volúmenes de Docker (¡Clave para no subir gigas de datos o bases de datos!)
+/jellyfin/
+/postgres_data/
+/media/
+
+# Ignorar variables de entorno (contraseñas)
+.env
+
+# Ignorar compilados de Rust (lo vamos a crear en el próximo paso)
+/backend/target/
+**/*.rs.bk
